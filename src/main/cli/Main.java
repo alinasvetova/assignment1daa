@@ -60,7 +60,6 @@ public class Main {
     }
 
     private static void runAlgorithm(String algo, int N, int[] arr, Metrics metrics) {
-        // Must copy array for in-place algorithms if running multiple trials with same base data
         int[] arrCopy = Arrays.copyOf(arr, N);
 
         switch (algo.toLowerCase()) {

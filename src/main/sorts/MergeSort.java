@@ -31,7 +31,10 @@ public class MergeSort {
         int mid = low + (high - low) / 2;
         sort(a, aux, low, mid, metrics, depth + 1);
         sort(a, aux, mid + 1, high, metrics, depth + 1);
-        merge(a, aux, low, mid, high, metrics);
+
+        if (ArrayUtil.less(a[mid + 1], a[mid], metrics)) {
+            merge(a, aux, low, mid, high, metrics);
+        }
     }
 
     private static void merge(int[] a, int[] aux, int low, int mid, int high, Metrics metrics) {

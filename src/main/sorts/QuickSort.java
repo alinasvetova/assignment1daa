@@ -9,6 +9,7 @@ public class QuickSort {
     public static void sort(int[] a, Metrics metrics) {
         if (a == null || a.length < 2) return;
         long startTime = System.nanoTime();
+        Rand.shuffle(a, metrics);
         sort(a, 0, a.length - 1, metrics, 1);
         metrics.nanos = System.nanoTime() - startTime;
     }

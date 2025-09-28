@@ -22,10 +22,10 @@ public class ClosestPair {
         metrics.addAlloc(Px.length * 2 * 8);
 
         long startTime = System.nanoTime();
-        double minDistance = closestPair(Px, Py, metrics, 1);
+        double minDistanceSq = closestPair(Px, Py, metrics, 1);
         metrics.nanos = System.nanoTime() - startTime;
 
-        return minDistance;
+        return Math.sqrt(minDistanceSq);
     }
 
     private static double closestPair(Point[] Px, Point[] Py, Metrics metrics, int depth) {
@@ -36,48 +36,56 @@ public class ClosestPair {
         metrics.observeDepth(depth);
 
         int mid = n / 2;
+        Point Lx = Px[mid - 1];
+
         Point[] Qx = Arrays.copyOfRange(Px, 0, mid);
         Point[] Rx = Arrays.copyOfRange(Px, mid, n);
+
+        metrics.addAlloc((Qx.length + Rx.length) * 8);
 
         List<Point> QyList = new ArrayList<>(mid);
         List<Point> RyList = new ArrayList<>(n - mid);
 
         for (Point p : Py) {
-            if (p.x < Px[mid].x) {
+            if (p.x <= Lx.x) {
                 QyList.add(p);
             } else {
                 RyList.add(p);
             }
         }
+
         Point[] Qy = QyList.toArray(new Point[0]);
         Point[] Ry = RyList.toArray(new Point[0]);
 
-        double deltaLeft = closestPair(Qx, Qy, metrics, depth + 1);
-        double deltaRight = closestPair(Rx, Ry, metrics, depth + 1);
-        double delta = Math.min(deltaLeft, deltaRight);
+        metrics.addAlloc((Qy.length + Ry.length) * 8);
 
-        double finalDelta = stripCheck(Py, Px[mid].x, delta, metrics);
+        double deltaLeftSq = closestPair(Qx, Qy, metrics, depth + 1);
+        double deltaRightSq = closestPair(Rx, Ry, metrics, depth + 1);
 
-        return finalDelta;
+        double deltaSq = Math.min(deltaLeftSq, deltaRightSq);
+
+        double finalDeltaSq = stripCheck(Py, Px[mid].x, deltaSq, metrics);
+
+        return Math.min(deltaSq, finalDeltaSq);
     }
 
     private static double bruteForce(Point[] Px, int low, int high, Metrics metrics) {
-        double min = INFINITY;
+        double minSq = INFINITY;
         for (int i = low; i <= high; i++) {
             for (int j = i + 1; j <= high; j++) {
-                // Every distance calculation implies a constant number of arithmetic operations
-                // and should be counted as 'comparisons' or 'moves' if we track ops.
-                // For simplicity, we only track the final Math.min comparison.
-                min = Math.min(min, Px[i].distance(Px[j]));
+                double distSq = Px[i].distanceSq(Px[j]);
+                minSq = Math.min(minSq, distSq);
                 metrics.addCompare();
             }
         }
-        return min;
+        return minSq;
     }
 
-    private static double stripCheck(Point[] Py, int Lx, double delta, Metrics metrics) {
+    private static double stripCheck(Point[] Py, int Lx, double deltaSq, Metrics metrics) {
 
         List<Point> SyList = new ArrayList<>();
+        double delta = Math.sqrt(deltaSq);
+
         for (Point p : Py) {
             if (Math.abs(p.x - Lx) < delta) {
                 SyList.add(p);
@@ -85,19 +93,19 @@ public class ClosestPair {
         }
 
         Point[] Sy = SyList.toArray(new Point[0]);
-        metrics.addAlloc(Sy.length * 8); // Allocation for strip array
-        double minStripDelta = delta;
+        metrics.addAlloc(Sy.length * 8);
+        double minStripDeltaSq = deltaSq;
 
         for (int i = 0; i < Sy.length; i++) {
-            for (int j = i + 1; j < Sy.length; j++) {
-                metrics.addCompare(); // Compare y-coords
-                if ((Sy[j].y - Sy[i].y) >= minStripDelta) break;
+            for (int j = i + 1; j < Sy.length && j < i + 15; j++) {
+                metrics.addCompare();
+                if ((Sy[j].y - Sy[i].y) >= delta) break;
 
-                double dist = Sy[i].distance(Sy[j]);
-                minStripDelta = Math.min(minStripDelta, dist);
-                metrics.addCompare(); // Compare final distance
+                double distSq = Sy[i].distanceSq(Sy[j]);
+                minStripDeltaSq = Math.min(minStripDeltaSq, distSq);
+                metrics.addCompare();
             }
         }
-        return minStripDelta;
+        return minStripDeltaSq;
     }
 }

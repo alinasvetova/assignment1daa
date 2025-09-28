@@ -1,3 +1,5 @@
+package test;
+
 import main.metrics.Metrics;
 import main.sorts.MergeSort;
 import org.junit.jupiter.api.Test;
@@ -36,6 +38,13 @@ public class MergeSortTest {
         for (int i = 0; i < N; i++) arr[i] = N - i;
         int[] expected = new int[N];
         for (int i = 0; i < N; i++) expected[i] = i + 1;
+        runSortTest(arr, expected);
+    }
+
+    @Test
+    void onArrayWithDuplicates_isCorrect() {
+        int[] arr = {5, 1, 5, 2, 2, 1, 8};
+        int[] expected = {1, 1, 2, 2, 5, 5, 8};
         runSortTest(arr, expected);
     }
 }

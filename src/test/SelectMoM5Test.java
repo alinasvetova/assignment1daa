@@ -1,3 +1,5 @@
+package test;
+
 import main.metrics.Metrics;
 import main.sorts.SelectMoM5;
 import org.junit.jupiter.api.Test;
@@ -5,6 +7,7 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SelectMoM5Test {
 
@@ -27,6 +30,7 @@ public class SelectMoM5Test {
             int result = SelectMoM5.select(arr, k, metrics);
 
             assertEquals(expected, result, "SelectMoM5 failed to find the " + k + "-th element.");
+            assertTrue(metrics.nanos > 0);
         }
     }
 
@@ -37,11 +41,17 @@ public class SelectMoM5Test {
 
         Metrics metrics = new Metrics();
 
-        // k=0 (smallest)
         assertEquals(sorted[0], SelectMoM5.select(Arrays.copyOf(arr, arr.length), 0, metrics));
-        // k=7 (largest)
         assertEquals(sorted[7], SelectMoM5.select(Arrays.copyOf(arr, arr.length), 7, metrics));
-        // k=3 (median)
         assertEquals(sorted[3], SelectMoM5.select(Arrays.copyOf(arr, arr.length), 3, metrics));
+    }
+
+    @Test
+    void onSmallArray_isCorrect() {
+        int[] arr = {9, 1, 4, 6, 2};
+        int[] sorted = {1, 2, 4, 6, 9};
+        Metrics metrics = new Metrics();
+
+        assertEquals(sorted[2], SelectMoM5.select(Arrays.copyOf(arr, arr.length), 2, metrics));
     }
 }

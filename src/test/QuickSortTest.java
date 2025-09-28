@@ -1,3 +1,5 @@
+package test;
+
 import main.metrics.Metrics;
 import main.sorts.QuickSort;
 import org.junit.jupiter.api.Test;
@@ -40,7 +42,6 @@ public class QuickSortTest {
         Metrics metrics = new Metrics();
         QuickSort.sort(arr, metrics);
 
-        // Ожидаемая глубина для QuickSort с оптимизацией хвостовой рекурсии и рандомизацией
         int maxExpectedDepth = (int) (2 * Math.floor(Math.log(N) / Math.log(2))) + 10;
 
         assertTrue(metrics.maxDepth < maxExpectedDepth,

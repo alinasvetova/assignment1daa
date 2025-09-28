@@ -12,37 +12,43 @@ public class SelectMoM5 {
         if (a == null || k < 0 || k >= a.length) {
             throw new IllegalArgumentException("Invalid input array or index k.");
         }
+        int[] arrCopy = Arrays.copyOf(a, a.length);
         long startTime = System.nanoTime();
-        int result = select(a, 0, a.length - 1, k, metrics, 1);
+        int result = selectRecursive(arrCopy, 0, arrCopy.length - 1, k, metrics, 1);
         metrics.nanos = System.nanoTime() - startTime;
         return result;
     }
 
-    private static int select(int[] a, int low, int high, int k, Metrics metrics, int depth) {
-        while (low <= high) {
-            metrics.observeDepth(depth);
+    private static int selectRecursive(int[] a, int low, int high, int k, Metrics metrics, int depth) {
+        metrics.observeDepth(depth);
 
-            if (high - low < GROUP_SIZE) {
-                insertionSort(a, low, high, metrics);
-                return a[k];
-            }
-
-            int pivotValue = medianOfMedians(a, low, high, metrics, depth + 1);
-            int pivotIndex = partitionAroundValue(a, low, high, pivotValue, metrics);
-
-            if (k == pivotIndex) {
-                return a[k];
-            } else if (k < pivotIndex) {
-                high = pivotIndex - 1;
-            } else {
-                low = pivotIndex + 1;
-            }
+        if (low == high) {
+            return a[low];
         }
-        return -1;
+
+        if (k < low || k > high) {
+            throw new IllegalArgumentException("Index k is out of bounds for current subarray.");
+        }
+
+        int pivotValue = medianOfMedians(a, low, high, metrics);
+        int pivotIndex = partitionAroundValue(a, low, high, pivotValue, metrics);
+
+        if (k == pivotIndex) {
+            return a[k];
+        } else if (k < pivotIndex) {
+            return selectRecursive(a, low, pivotIndex - 1, k, metrics, depth + 1);
+        } else {
+            return selectRecursive(a, pivotIndex + 1, high, k, metrics, depth + 1);
+        }
     }
 
-    private static int medianOfMedians(int[] a, int low, int high, Metrics metrics, int nextDepth) {
+    private static int medianOfMedians(int[] a, int low, int high, Metrics metrics) {
         int n = high - low + 1;
+        if (n <= GROUP_SIZE) {
+            insertionSort(a, low, high, metrics);
+            return a[low + n / 2];
+        }
+
         int numGroups = (n + GROUP_SIZE - 1) / GROUP_SIZE;
         int[] medians = new int[numGroups];
         metrics.addAlloc(numGroups * Integer.BYTES);
@@ -54,10 +60,10 @@ public class SelectMoM5 {
             insertionSort(a, groupLow, groupHigh, metrics);
 
             medians[i] = a[groupLow + (groupHigh - groupLow) / 2];
-            metrics.addMove(1);
         }
 
-        return select(medians, 0, medians.length - 1, (medians.length - 1) / 2, metrics, nextDepth);
+        Arrays.sort(medians);
+        return medians[(medians.length - 1) / 2];
     }
 
     private static void insertionSort(int[] a, int low, int high, Metrics metrics) {
