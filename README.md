@@ -1,38 +1,54 @@
 
 # Algorithmic Complexity and Performance Analysis (Assignment 1 DAA)
 
-This project is dedicated to the empirical analysis and comparison of several fundamental algorithms by measuring their performance metrics (runtime, operation count, recursion depth) against varying input sizes ($N$). The core objective is to validate their observed time complexity against their theoretical $O$-notation.
+This project is dedicated to the empirical analysis and comparison of several fundamental Divide & Conquer (D&C) algorithms by measuring their performance metrics (runtime, operation count, recursion depth) against varying input sizes ($N$). The core objective is to validate their observed time complexity against their theoretical $O$-notation.
 
 ## Algorithms Implemented
 
-The project includes four distinct algorithms:
+The project includes four distinct algorithms, all implemented with a focus on D&C principles:
 
-1.  **MergeSort:** A guaranteed $O(N \log N)$ sorting algorithm.
-2.  **QuickSort:** An efficient sorting algorithm, typically $O(N \log N)$ average-case, but $O(N^2)$ worst-case.
-3.  **SelectMoM5 (Median of Medians):** A deterministic selection algorithm with a proven linear time complexity of $O(N)$.
-4.  **ClosestPair:** A computational geometry algorithm designed to find the closest pair of points in a 2D array, typically implemented with $O(N \log N)$ complexity.
+1.  **MergeSort:**
+    * Guaranteed $O(N \log N)$ complexity.
+    * **Implementation Note:** Uses a small-n cutoff to switch to Insertion Sort for improved efficiency on small subarrays.
 
-## Project Structure
+2.  **QuickSort (Robust Implementation):**
+    * Expected average-case $O(N \log N)$, worst-case $O(N^2)$.
+    * **Implementation Note:** Employs strategies such as random pivot selection and handling the smaller recursive call first to maintain a stable stack depth $\approx O(\log N)$.
 
-The project follows a standard Java package structure:
+3.  **SelectMoM5 (Deterministic Select):**
+    * Guaranteed worst-case $O(N)$ linear time complexity.
+    * **Implementation Note:** Implements the Median-of-Medians strategy (groups of 5) to ensure the pivot selection maintains the linear time bound.
 
-```
+4.  **ClosestPair (2D Points):**
+    * $O(N \log N)$ complexity.
+    * **Implementation Note:** Follows the classic D&C approach involving sorting by $x$, recursive split, and a linear-time strip check (guaranteed few neighbor checks).
 
-assignment1daa/
-├── src/
-│   ├── main/
-│   │   ├── cli/             (Contains Main.java - the execution entry point)
-│   │   ├── geometry/        (ClosestPair logic)
-│   │   ├── metrics/         (Metrics tracking classes and CSV Writer)
-│   │   └── sorts/           (Sorting and Selection algorithms)
-│   └── test/                (Contains JUnit tests for all algorithms)
-├── out/                     (Build output directory)
-│   └── artifacts/           (Contains the compiled assignment1daa.jar)
-└── metrics\_results.csv      (Generated file containing all collected benchmark data)
+## Metrics and Data Collection
 
-````
+For each run, the program automatically collects metrics and appends them to a CSV file for plotting and analysis.
 
-## Setup and Testing
+### Collected Metrics
+* **Execution Time (ns)**: Total runtime in nanoseconds.
+* **Max Recursion Depth**: Maximum depth reached during execution.
+* **Number of Key Comparisons**: Count of logical comparison operations.
+* **Logical Allocations**: Count of significant buffer/array allocations (e.g., merge buffer).
+
+### CSV Header
+All results are appended to the output file using the following header structure:
+`Algorithm, N, Trial, TimeNs, Comparisons, Allocations, MaxDepth`
+
+## Analysis (Theoretical Complexity)
+
+| Algorithm | Recurrence Relation (Intuition) | Theoretical Complexity | Master Theorem Case |
+| :--- | :--- | :--- | :--- |
+| **MergeSort** | $T(n)=2T(n/2)+\Theta(n)$ | $\Theta(n\log n)$ | Case 2 |
+| **QuickSort** | (Not standard Master) | Expected $\Theta(n\log n)$ | Akra–Bazzi / Substitution |
+| **Select (MoM5)** | $T(n) \le T(n/5)+T(7n/10)+\Theta(n)$ | $\Theta(n)$ | None (Substitution) |
+| **Closest Pair** | $T(n)=2T(n/2)+\Theta(n)$ | $\Theta(n\log n)$ | Case 2 |
+
+---
+
+## Setup, Build, and Run Instructions
 
 ### Requirements
 * Java Development Kit (JDK) 23 or later.
@@ -40,23 +56,18 @@ assignment1daa/
 
 ### Testing (JUnit 5)
 
-Algorithm correctness is verified using dedicated JUnit 5 test classes (e.g., `MergeSortTest.java`, `ClosestPairTest.java`).
-
-To run all tests:
-1.  Navigate to the `test` directory in the Project window.
-2.  Right-click and select **Run 'All Tests'**.
+Algorithm correctness is verified using dedicated JUnit 5 test classes in the `src/test` directory.
+To run all tests: Right-click on the `test` folder in IntelliJ and select **Run 'All Tests'**.
 
 ### Building the Executable JAR
 
-The project is packaged into an executable JAR file for command-line execution:
-1.  In IntelliJ IDEA, go to `Build` -> `Build Artifacts` -> `assignment1daa.jar` -> **Build**.
-2.  The resulting executable is located at: `out/artifacts/assignment1daa_jar/assignment1daa.jar`.
+The project uses the IntelliJ IDEA artifact builder to create an executable JAR:
+1.  Go to `Build` -> `Build Artifacts` -> `assignment1daa.jar` -> **Build**.
+2.  The executable is located at: `out/artifacts/assignment1daa_jar/assignment1daa.jar`.
 
-## Benchmarking and Data Collection
+### Command Line Interface (CLI)
 
-The program is run from the command line to generate performance metrics.
-
-### Execution Syntax
+The main class `main.cli.Main` is run via the generated JAR file using **positional arguments**:
 
 ```bash
 java -jar <PATH_TO_JAR> <N> <Algorithm> [<Trials>]
@@ -64,19 +75,19 @@ java -jar <PATH_TO_JAR> <N> <Algorithm> [<Trials>]
 
 | Parameter | Description |
 | :--- | :--- |
-| **\<N\>** | The size of the input data (e.g., 1000, 100000). |
+| **\<N\>** | The size of the input data (or points). |
 | **\<Algorithm\>** | Algorithm name: `MergeSort`, `QuickSort`, `SelectMoM5`, or `ClosestPair`. |
-| **[\<Trials\>]** | (Optional) Number of times to repeat the test (e.g., 10). |
+| **[\<Trials\>]** | Number of times to repeat the test (e.g., 10). |
 
-### Example Run
+### Example Runs
 
-Use the determined path to run benchmarks:
+Use the determined path to run benchmarks from the project's root directory:
 
 ```bash
-# Running MergeSort for N=1000, 10 trials
-java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 1000 MergeSort 10
+# Running QuickSort for N=100000, 10 trials
+java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 100000 QuickSort 10
 
-# Running ClosestPair for N=10000, 10 trials
+# Running Closest Pair for N=10000, 10 trials
 java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 10000 ClosestPair 10
 ```
 
@@ -85,4 +96,6 @@ java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 10000 ClosestPair 
 All collected metrics are appended to the CSV file located in the project's root directory:
 **Output File:** `metrics_results.csv`
 
-```
+-----
+
+Ваш проект полностью задокументирован и готов к финальному этапу сбора данных. У вас получился отличный `README`\!
