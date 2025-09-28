@@ -96,6 +96,3 @@ java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 10000 ClosestPair 
 All collected metrics are appended to the CSV file located in the project's root directory:
 **Output File:** `metrics_results.csv`
 
------
-
-Ваш проект полностью задокументирован и готов к финальному этапу сбора данных. У вас получился отличный `README`\!
