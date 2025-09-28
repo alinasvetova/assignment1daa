@@ -1,58 +1,60 @@
 
 # Algorithmic Complexity and Performance Analysis (Assignment 1 DAA)
 
-This project implements and empirically evaluates the performance of several classic algorithms against various input sizes ($N$). The goal is to compare the observed runtime complexity with the theoretical big-O notation.
+This project is dedicated to the empirical analysis and comparison of several fundamental algorithms by measuring their performance metrics (runtime, operation count, recursion depth) against varying input sizes ($N$). The core objective is to validate their observed time complexity against their theoretical $O$-notation.
 
 ## Algorithms Implemented
 
-The following algorithms are implemented in Java, primarily focused on sorting, selection, and computational geometry:
+The project includes four distinct algorithms:
 
-1.  **MergeSort:** Comparison-based sorting algorithm ($O(N \log N)$ worst-case).
-2.  **QuickSort:** Comparison-based sorting algorithm ($O(N \log N)$ average-case, $O(N^2)$ worst-case).
-3.  **SelectMoM5 (Median of Medians):** Deterministic selection algorithm for finding the $k$-th smallest element ($O(N)$ worst-case).
-4.  **ClosestPair:** Algorithm for finding the minimum distance between two points in a 2D plane ($O(N \log N)$).
+1.  **MergeSort:** A guaranteed $O(N \log N)$ sorting algorithm.
+2.  **QuickSort:** An efficient sorting algorithm, typically $O(N \log N)$ average-case, but $O(N^2)$ worst-case.
+3.  **SelectMoM5 (Median of Medians):** A deterministic selection algorithm with a proven linear time complexity of $O(N)$.
+4.  **ClosestPair:** A computational geometry algorithm designed to find the closest pair of points in a 2D array, typically implemented with $O(N \log N)$ complexity.
 
 ## Project Structure
 
-The codebase is organized into logical packages:
+The project follows a standard Java package structure:
 
 ```
 
-src/
-├── main/
-│   ├── cli/             (Main entry point for command-line execution)
-│   ├── geometry/        (ClosestPair, Point)
-│   ├── metrics/         (Metrics tracking and CSV output: Metrics, CsWriter)
-│   └── sorts/           (MergeSort, QuickSort, SelectMoM5)
-└── test/
-├── ClosestPairTest  (JUnit tests for ClosestPair)
-└── ...              (JUnit tests for sorting and selection algorithms)
+assignment1daa/
+├── src/
+│   ├── main/
+│   │   ├── cli/             (Contains Main.java - the execution entry point)
+│   │   ├── geometry/        (ClosestPair logic)
+│   │   ├── metrics/         (Metrics tracking classes and CSV Writer)
+│   │   └── sorts/           (Sorting and Selection algorithms)
+│   └── test/                (Contains JUnit tests for all algorithms)
+├── out/                     (Build output directory)
+│   └── artifacts/           (Contains the compiled assignment1daa.jar)
+└── metrics\_results.csv      (Generated file containing all collected benchmark data)
 
 ````
 
-## Requirements
+## Setup and Testing
 
+### Requirements
 * Java Development Kit (JDK) 23 or later.
-* JUnit 5 for running tests.
+* IntelliJ IDEA (Recommended IDE).
 
-## Testing Algorithms (JUnit)
+### Testing (JUnit 5)
 
-All algorithms are validated using JUnit 5 tests located in the `src/test` directory.
+Algorithm correctness is verified using dedicated JUnit 5 test classes (e.g., `MergeSortTest.java`, `ClosestPairTest.java`).
 
-To run all tests in IntelliJ IDEA:
-1.  Right-click on the `test` folder.
-2.  Select **Run 'All Tests'**.
+To run all tests:
+1.  Navigate to the `test` directory in the Project window.
+2.  Right-click and select **Run 'All Tests'**.
 
-## Building the Project
+### Building the Executable JAR
 
-The project is built as an executable JAR file using the IntelliJ IDEA built-in artifact mechanism.
+The project is packaged into an executable JAR file for command-line execution:
+1.  In IntelliJ IDEA, go to `Build` -> `Build Artifacts` -> `assignment1daa.jar` -> **Build**.
+2.  The resulting executable is located at: `out/artifacts/assignment1daa_jar/assignment1daa.jar`.
 
-1.  **Build Artifact:** Navigate to `Build` -> `Build Artifacts` -> `assignment1daa.jar` -> `Build`.
-2.  The resulting JAR file is created at: `out/artifacts/assignment1daa_jar/assignment1daa.jar`.
+## Benchmarking and Data Collection
 
-## Data Collection (Running Benchmarks)
-
-The program's entry point (`main.cli.Main`) is designed to run algorithms multiple times for a given $N$ and output the collected performance metrics (nanos, comparisons, recursion depth, etc.) to a CSV file.
+The program is run from the command line to generate performance metrics.
 
 ### Execution Syntax
 
@@ -62,25 +64,25 @@ java -jar <PATH_TO_JAR> <N> <Algorithm> [<Trials>]
 
 | Parameter | Description |
 | :--- | :--- |
-| `<N>` | The size of the input data (e.g., 1000, 100000). |
-| `<Algorithm>` | Algorithm name: `MergeSort`, `QuickSort`, `SelectMoM5`, or `ClosestPair`. |
-| `[<Trials>]` | (Optional) Number of times to run the test (e.g., 10). Default is 5. |
+| **\<N\>** | The size of the input data (e.g., 1000, 100000). |
+| **\<Algorithm\>** | Algorithm name: `MergeSort`, `QuickSort`, `SelectMoM5`, or `ClosestPair`. |
+| **[\<Trials\>]** | (Optional) Number of times to repeat the test (e.g., 10). |
 
-### Example Commands (Using determined path)
+### Example Run
 
-Run the following commands in the terminal from the project's root directory:
+Use the determined path to run benchmarks:
 
 ```bash
-# Example 1: Run QuickSort with N=100000, 10 trials
-java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 100000 QuickSort 10
+# Running MergeSort for N=1000, 10 trials
+java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 1000 MergeSort 10
 
-# Example 2: Run ClosestPair with N=10000, 10 trials
+# Running ClosestPair for N=10000, 10 trials
 java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 10000 ClosestPair 10
 ```
 
-### Output File
+### Output
 
-All metrics are appended to the file **`metrics_results.csv`** in the project's root directory.
+All collected metrics are appended to the CSV file located in the project's root directory:
+**Output File:** `metrics_results.csv`
 
-```
 ```
