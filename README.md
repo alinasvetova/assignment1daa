@@ -1,4 +1,3 @@
-
 # Algorithmic Complexity and Performance Analysis (Assignment 1 DAA)
 
 This project is dedicated to the empirical analysis and comparison of several fundamental Divide & Conquer (D&C) algorithms by measuring their performance metrics (runtime, operation count, recursion depth) against varying input sizes ($N$). The core objective is to validate their observed time complexity against their theoretical $O$-notation.
@@ -37,6 +36,13 @@ For each run, the program automatically collects metrics and appends them to a C
 All results are appended to the output file using the following header structure:
 `Algorithm, N, Trial, TimeNs, Comparisons, Allocations, MaxDepth`
 
+## Project Architecture Notes (Criteria Requirement)
+
+The project is structured according to **standard Maven conventions** (`src/main/java`, `src/test/java`). This design was chosen for its portability and compliance with professional build standards.
+
+* **Recursion Depth Control:** The **QuickSort** implementation guarantees a bounded stack depth of $O(\log N)$ (typical case) by always recurring on the smaller partition and iterating on the larger one. The **DepthTracker** utility explicitly monitors and caps this metric.
+* **Allocation Control:** The **MergeSort** implementation uses a **reusable auxiliary buffer** to avoid repeated memory allocation inside the recursive calls, significantly reducing the "Logical Allocations" count and mitigating GC overhead.
+
 ## Analysis (Theoretical Complexity)
 
 | Algorithm | Recurrence Relation (Intuition) | Theoretical Complexity | Master Theorem Case |
@@ -51,48 +57,47 @@ All results are appended to the output file using the following header structure
 ## Setup, Build, and Run Instructions
 
 ### Requirements
-* Java Development Kit (JDK) 23 or later.
-* IntelliJ IDEA (Recommended IDE).
+* **Java Development Kit (JDK) 23** or later.
+* **Maven** (The project is configured to be built via the Maven `pom.xml` file).
 
 ### Testing (JUnit 5)
 
-Algorithm correctness is verified using dedicated JUnit 5 test classes in the `src/test` directory.
-To run all tests: Right-click on the `test` folder in IntelliJ and select **Run 'All Tests'**.
+Algorithm correctness is verified using dedicated JUnit 5 test classes located in the `src/test/java` directory.
 
-### Building the Executable JAR
-
-The project uses the IntelliJ IDEA artifact builder to create an executable JAR:
-1.  Go to `Build` -> `Build Artifacts` -> `assignment1daa.jar` -> **Build**.
-2.  The executable is located at: `out/artifacts/assignment1daa_jar/assignment1daa.jar`.
-
-### Command Line Interface (CLI)
-
-The main class `main.cli.Main` is run via the generated JAR file using **positional arguments**:
-
+To run all tests using the Maven build tool (as required by the assignment criteria):
 ```bash
-java -jar <PATH_TO_JAR> <N> <Algorithm> [<Trials>]
-````
+mvn test
+Building the Executable JAR
 
-| Parameter | Description |
-| :--- | :--- |
-| **\<N\>** | The size of the input data (or points). |
-| **\<Algorithm\>** | Algorithm name: `MergeSort`, `QuickSort`, `SelectMoM5`, or `ClosestPair`. |
-| **[\<Trials\>]** | Number of times to repeat the test (e.g., 10). |
+The project must be built using Maven to create the final executable JAR:
 
-### Example Runs
+Clean and Package: Execute the Maven lifecycle goals from the project root directory:
 
-Use the determined path to run benchmarks from the project's root directory:
+Bash
+mvn clean package
+Location: The executable JAR is created in the standard Maven target directory: target/assignment1daa-1.0-SNAPSHOT.jar.
 
-```bash
+Command Line Interface (CLI)
+
+The main class main.cli.Main is run via the generated Maven JAR file using positional arguments:
+
+Bash
+java -jar target/assignment1daa-1.0-SNAPSHOT.jar <N> <Algorithm> [<Trials>]
+Parameter	Description
+<N>	The size of the input data (or points).
+<Algorithm>	Algorithm name: MergeSort, QuickSort, SelectMoM5, or ClosestPair.
+[<Trials>]	Number of times to repeat the test (e.g., 10).
+Example Runs
+
+Run benchmarks from the project's root directory after successful compilation:
+
+Bash
 # Running QuickSort for N=100000, 10 trials
-java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 100000 QuickSort 10
+java -jar target/assignment1daa-1.0-SNAPSHOT.jar 100000 QuickSort 10
 
 # Running Closest Pair for N=10000, 10 trials
-java -jar out/artifacts/assignment1daa_jar/assignment1daa.jar 10000 ClosestPair 10
-```
-
-### Output
+java -jar target/assignment1daa-1.0-SNAPSHOT.jar 10000 ClosestPair 10
+Output
 
 All collected metrics are appended to the CSV file located in the project's root directory:
-**Output File:** `metrics_results.csv`
-
+Output File: metrics_results.csv
