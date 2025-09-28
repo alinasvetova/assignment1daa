@@ -1,7 +1,7 @@
-package main.util;
+package util;
 
 import java.util.Random;
-import main.metrics.Metrics;
+import metrics.Metrics;
 
 public class Rand {
     private static final Random RAND = new Random();

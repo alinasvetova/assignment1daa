@@ -1,4 +1,4 @@
-package main.util;
+package util;
 
 public class ArrayGuards {
     public static void checkRange(int[] a, int low, int high) {

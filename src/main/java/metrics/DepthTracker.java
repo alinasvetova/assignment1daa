@@ -1,4 +1,4 @@
-package main.metrics;
+package metrics;
 
 public class DepthTracker implements AutoCloseable {
     private final Metrics m;

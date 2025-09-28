@@ -1,4 +1,4 @@
-package main.geometry;
+package geometry;
 
 public class Point {
     public final int x;

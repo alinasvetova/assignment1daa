@@ -1,8 +1,8 @@
-package main.sorts;
+package sorts;
 
-import main.metrics.Metrics;
-import main.util.ArrayUtil;
-import main.util.Rand;
+import metrics.Metrics;
+import util.ArrayUtil;
+import util.Rand;
 
 public class QuickSort {
 

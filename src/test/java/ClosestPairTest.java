@@ -1,8 +1,6 @@
-package test;
-
-import main.geometry.ClosestPair;
-import main.geometry.Point;
-import main.metrics.Metrics;
+import geometry.ClosestPair;
+import geometry.Point;
+import metrics.Metrics;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

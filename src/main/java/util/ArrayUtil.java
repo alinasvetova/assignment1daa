@@ -1,6 +1,6 @@
-package main.util;
+package util;
 
-import main.metrics.Metrics;
+import metrics.Metrics;
 
 public class ArrayUtil {
 

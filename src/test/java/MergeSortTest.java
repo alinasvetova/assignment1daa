@@ -1,7 +1,5 @@
-package test;
-
-import main.metrics.Metrics;
-import main.sorts.MergeSort;
+import metrics.Metrics;
+import sorts.MergeSort;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;

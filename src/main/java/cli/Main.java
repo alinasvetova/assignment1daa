@@ -1,12 +1,12 @@
-package main.cli;
+package cli;
 
-import main.metrics.Metrics;
-import main.metrics.CsWriter;
-import main.sorts.MergeSort;
-import main.sorts.QuickSort;
-import main.sorts.SelectMoM5;
-import main.geometry.ClosestPair;
-import main.geometry.Point;
+import metrics.Metrics;
+import metrics.CsWriter;
+import sorts.MergeSort;
+import sorts.QuickSort;
+import sorts.SelectMoM5;
+import geometry.ClosestPair;
+import geometry.Point;
 
 import java.io.File;
 import java.io.IOException;

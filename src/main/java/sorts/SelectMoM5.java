@@ -1,7 +1,7 @@
-package main.sorts;
+package sorts;
 
-import main.metrics.Metrics;
-import main.util.ArrayUtil;
+import metrics.Metrics;
+import util.ArrayUtil;
 import java.util.Arrays;
 
 public class SelectMoM5 {

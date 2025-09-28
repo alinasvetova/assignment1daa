@@ -1,4 +1,4 @@
-package main.metrics;
+package metrics;
 
 public class Metrics {
     public long comparisons;

@@ -1,7 +1,5 @@
-package test;
-
-import main.metrics.Metrics;
-import main.sorts.SelectMoM5;
+import metrics.Metrics;
+import sorts.SelectMoM5;
 import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Random;

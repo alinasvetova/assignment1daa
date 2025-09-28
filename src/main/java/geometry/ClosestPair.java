@@ -1,6 +1,6 @@
-package main.geometry;
+package geometry;
 
-import main.metrics.Metrics;
+import metrics.Metrics;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;

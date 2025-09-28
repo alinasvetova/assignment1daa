@@ -1,4 +1,4 @@
-package main.metrics;
+package metrics;
 
 import java.io.Closeable;
 import java.io.File;

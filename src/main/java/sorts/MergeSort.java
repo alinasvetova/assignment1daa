@@ -1,8 +1,7 @@
-package main.sorts;
+package sorts;
 
-import main.metrics.Metrics;
-import main.util.ArrayUtil;
-import java.util.Arrays;
+import metrics.Metrics;
+import util.ArrayUtil;
 
 public class MergeSort {
 
