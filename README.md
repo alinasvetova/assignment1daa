@@ -102,3 +102,6 @@ Output
 
 All collected metrics are appended to the CSV file located in the project’s root directory:
 	•	Output File: final_results.csv
+
+
+<img width="401" height="218" alt="image" src="https://github.com/user-attachments/assets/51bcc29a-5f4c-414a-a7a1-4e7965353538" />
