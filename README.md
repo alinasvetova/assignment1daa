@@ -1,103 +1,104 @@
-# Algorithmic Complexity and Performance Analysis (Assignment 1 DAA)
+Algorithmic Complexity and Performance Analysis (Assignment 1 DAA)
 
-This project is dedicated to the empirical analysis and comparison of several fundamental Divide & Conquer (D&C) algorithms by measuring their performance metrics (runtime, operation count, recursion depth) against varying input sizes ($N$). The core objective is to validate their observed time complexity against their theoretical $O$-notation.
+This project focuses on the empirical analysis and comparison of several fundamental Divide & Conquer (D&C) algorithms. The goal is to measure their performance metrics (runtime, operation count, recursion depth) against varying input sizes N, and validate their observed time complexity against theoretical O-notation.
 
-## Algorithms Implemented
+Algorithms Implemented
 
-The project includes four distinct algorithms, all implemented with a focus on D&C principles:
+The project includes four distinct algorithms, all designed with D&C principles:
 
-1.  **MergeSort:**
-    * Guaranteed $O(N \log N)$ complexity.
-    * **Implementation Note:** Uses a small-n cutoff to switch to Insertion Sort for improved efficiency on small subarrays.
+MergeSort
+	•	Time Complexity: O(N \log N)
+	•	Implementation Note: Uses a small-n cutoff to switch to Insertion Sort for improved efficiency on small subarrays.
 
-2.  **QuickSort (Robust Implementation):**
-    * Expected average-case $O(N \log N)$, worst-case $O(N^2)$.
-    * **Implementation Note:** Employs strategies such as random pivot selection and handling the smaller recursive call first to maintain a stable stack depth $\approx O(\log N)$.
+QuickSort (Robust Implementation)
+	•	Time Complexity:
+	•	Expected average-case: O(N \log N)
+	•	Worst-case: O(N^2)
+	•	Implementation Note: Uses random pivot selection and handles the smaller recursive call first to maintain a stable stack depth of approximately O(\log N).
 
-3.  **SelectMoM5 (Deterministic Select):**
-    * Guaranteed worst-case $O(N)$ linear time complexity.
-    * **Implementation Note:** Implements the Median-of-Medians strategy (groups of 5) to ensure the pivot selection maintains the linear time bound.
+SelectMoM5 (Deterministic Select)
+	•	Time Complexity: O(N) (guaranteed worst-case linear time)
+	•	Implementation Note: Implements the Median-of-Medians strategy (groups of 5) to ensure the pivot selection maintains the linear time bound.
 
-4.  **ClosestPair (2D Points):**
-    * $O(N \log N)$ complexity.
-    * **Implementation Note:** Follows the classic D&C approach involving sorting by $x$, recursive split, and a linear-time strip check (guaranteed few neighbor checks).
+ClosestPair (2D Points)
+	•	Time Complexity: O(N \log N)
+	•	Implementation Note: Follows the classic D&C approach involving sorting by x, recursive split, and a linear-time strip check with guaranteed few neighbor checks.
 
-## Metrics and Data Collection
+Metrics and Data Collection
 
-For each run, the program automatically collects metrics and appends them to a CSV file for plotting and analysis.
+For each run, the program collects the following performance metrics and appends them to a CSV file for further plotting and analysis:
 
-### Collected Metrics
-* **Execution Time (ns)**: Total runtime in nanoseconds.
-* **Max Recursion Depth**: Maximum depth reached during execution.
-* **Number of Key Comparisons**: Count of logical comparison operations.
-* **Logical Allocations**: Count of significant buffer/array allocations (e.g., merge buffer).
+Collected Metrics
+	•	Execution Time (ns): Total runtime in nanoseconds.
+	•	Max Recursion Depth: Maximum depth reached during execution.
+	•	Number of Key Comparisons: Count of logical comparison operations.
+	•	Logical Allocations: Count of significant buffer/array allocations (e.g., merge buffer).
 
-### CSV Header
-All results are appended to the output file using the following header structure:
-`Algorithm, N, Trial, TimeNs, Comparisons, Allocations, MaxDepth`
+The results are appended to the output file using the following header structure:
+	•	Algorithm, N, Trial, TimeNs, Comparisons, Allocations, MaxDepth
 
-## Project Architecture Notes (Criteria Requirement)
+Note: The final results of all algorithm tests are recorded in the file final_results.csv.
 
-The project is structured according to **standard Maven conventions** (`src/main/java`, `src/test/java`). This design was chosen for its portability and compliance with professional build standards.
+Project Architecture Notes
+	•	Maven Structure: The project follows standard Maven conventions (src/main/java, src/test/java) for portability and build standards.
+	•	Recursion Depth Control: QuickSort guarantees a bounded stack depth of O(\log N) by always recurring on the smaller partition and iterating on the larger one. The DepthTracker utility explicitly monitors and caps this metric.
+	•	Allocation Control: MergeSort uses a reusable auxiliary buffer to avoid repeated memory allocations inside recursive calls, reducing the “Logical Allocations” count and minimizing GC overhead.
 
-* **Recursion Depth Control:** The **QuickSort** implementation guarantees a bounded stack depth of $O(\log N)$ (typical case) by always recurring on the smaller partition and iterating on the larger one. The **DepthTracker** utility explicitly monitors and caps this metric.
-* **Allocation Control:** The **MergeSort** implementation uses a **reusable auxiliary buffer** to avoid repeated memory allocation inside the recursive calls, significantly reducing the "Logical Allocations" count and mitigating GC overhead.
+Analysis (Theoretical Complexity)
 
-## Analysis (Theoretical Complexity)
+Algorithm	Recurrence Relation (Intuition)	Theoretical Complexity	Master Theorem Case
+MergeSort	T(n) = 2T(n/2) + \Theta(n)	\Theta(n \log n)	Case 2
+QuickSort	(Not standard Master)	Expected \Theta(n \log n)	Akra–Bazzi / Substitution
+Select (MoM5)	T(n) \leq T(n/5) + T(7n/10) + \Theta(n)	\Theta(n)	None (Substitution)
+Closest Pair	T(n) = 2T(n/2) + \Theta(n)	\Theta(n \log n)	Case 2
 
-| Algorithm | Recurrence Relation (Intuition) | Theoretical Complexity | Master Theorem Case |
-| :--- | :--- | :--- | :--- |
-| **MergeSort** | $T(n)=2T(n/2)+\Theta(n)$ | $\Theta(n\log n)$ | Case 2 |
-| **QuickSort** | (Not standard Master) | Expected $\Theta(n\log n)$ | Akra–Bazzi / Substitution |
-| **Select (MoM5)** | $T(n) \le T(n/5)+T(7n/10)+\Theta(n)$ | $\Theta(n)$ | None (Substitution) |
-| **Closest Pair** | $T(n)=2T(n/2)+\Theta(n)$ | $\Theta(n\log n)$ | Case 2 |
+Setup, Build, and Run Instructions
 
----
+Requirements
+	•	Java Development Kit (JDK): Version 23 or later.
+	•	Maven: The project is configured to be built via the Maven pom.xml file.
+	•	JUnit 5: For testing algorithm correctness (JUnit tests are located in src/test/java).
 
-## Setup, Build, and Run Instructions
+Running the Tests
 
-### Requirements
-* **Java Development Kit (JDK) 23** or later.
-* **Maven** (The project is configured to be built via the Maven `pom.xml` file).
+To verify algorithm correctness, use the following command:
 
-### Testing (JUnit 5)
-
-Algorithm correctness is verified using dedicated JUnit 5 test classes located in the `src/test/java` directory.
-
-To run all tests using the Maven build tool (as required by the assignment criteria):
-```bash
 mvn test
+
 Building the Executable JAR
 
-The project must be built using Maven to create the final executable JAR:
+The project can be built using Maven to generate the final executable JAR:
+	1.	Clean and Package the Project:
 
-Clean and Package: Execute the Maven lifecycle goals from the project root directory:
-
-Bash
 mvn clean package
-Location: The executable JAR is created in the standard Maven target directory: target/assignment1daa-1.0-SNAPSHOT.jar.
+
+
+	2.	The executable JAR will be located in the target directory as assignment1daa-1.0-SNAPSHOT.jar.
 
 Command Line Interface (CLI)
 
 The main class main.cli.Main is run via the generated Maven JAR file using positional arguments:
 
-Bash
 java -jar target/assignment1daa-1.0-SNAPSHOT.jar <N> <Algorithm> [<Trials>]
-Parameter	Description
-<N>	The size of the input data (or points).
-<Algorithm>	Algorithm name: MergeSort, QuickSort, SelectMoM5, or ClosestPair.
-[<Trials>]	Number of times to repeat the test (e.g., 10).
-Example Runs
 
-Run benchmarks from the project's root directory after successful compilation:
+Parameters:
+	•	<N>: The size of the input data (or points).
+	•	<Algorithm>: Algorithm name: MergeSort, QuickSort, SelectMoM5, or ClosestPair.
+	•	[<Trials>]: The number of times to repeat the test (default is 1).
 
-Bash
-# Running QuickSort for N=100000, 10 trials
+Example Runs:
+	•	Running QuickSort for N = 100000, 10 trials:
+
 java -jar target/assignment1daa-1.0-SNAPSHOT.jar 100000 QuickSort 10
 
-# Running Closest Pair for N=10000, 10 trials
+
+	•	Running Closest Pair for N = 10000, 10 trials:
+
 java -jar target/assignment1daa-1.0-SNAPSHOT.jar 10000 ClosestPair 10
+
+
+
 Output
 
-All collected metrics are appended to the CSV file located in the project's root directory:
-Output File: metrics_results.csv
+All collected metrics are appended to the CSV file located in the project’s root directory:
+	•	Output File: final_results.csv
